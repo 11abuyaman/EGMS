@@ -1,0 +1,31 @@
+<div class="col-lg-4 col-md-6">
+    <div data-appointment-id="{{ appointment.id }}" class="card appointment hover-3d card-stretch card-bordered mb-5">
+        <div class="appointment-header border-bottom p-5">
+            <div class="appointment-doctor pe-4">
+                <div class="symbol symbol-40px me-3">
+                    <img src="{{ appointment.doctor.get_profile_picture }}"/>
+                </div>
+                <div>
+                    <a href="" class="link-dark">{{ appointment.doctor.get_full_name }}</a>
+                    <div class="text-muted">{{ department.name }}</div>
+                </div>
+            </div>
+            <div class="appointment-date border-start ps-4 w-30">
+                <h6>{{ appointment.date|date:"N j, l" }}</h6>
+                <div class="card-toolbar">
+                    <span class="btn btn-sm bg-light-primary text-primary border w-100">
+                        <i class="far fa-clock text-primary"></i> {{ appointment.date|date:"g:i a" }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-5">
+            <button type="button"
+                    onclick="showConfirmBooking({{ appointment.id }},'{{ appointment.doctor.get_full_name }}','{{ appointment.date }}')"
+                    class="btn w-100 btn-primary"
+                    {% if department.appointments.count == 0 %}disabled{% endif %}>
+                <i class="far fa-calendar-check"></i> Book appointment
+            </button>
+        </div>
+    </div>
+</div>

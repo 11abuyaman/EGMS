@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tags %}
+
+{% block page-title %}{{ department.name }}{% endblock %}
+{% block title %}<a href="{% url 'departments' %}">Departments</a>{% endblock %}
+{% block secondary-title %}{{ department.name }}{% endblock %}
+
+{% block content %}
+    <div class="card mb-2">
+        <div class="card-body fs-6 py-15 px-10 py-lg-15 px-lg-15 text-gray-700">
+            <h1 class="fw-bolder mb-5" id="departments">{{ department.name }} appointments</h1>
+            <div class="accordion" id="appointments-accordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="in-week-accordion-header">
+                        <button class="accordion-button fs-4 fw-bold" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#in-week-accordion-body" aria-expanded="true"
+                                aria-controls="in-week-accordion-body">
+                            In a week
+                            {% if appointments.in_week|length %}
+                                <span class="badge badge-primary ms-3">{{ appointments.in_week|length }} available</span>
+                            {% else %}
+                                <span class="badge badge-light-dark ms-3">No appointments available</span>
+                            {% endif %}
+                        </button>
+                    </h2>
+                    <div id="in-week-accordion-body" class="accordion-collapse collapse show"
+                         aria-labelledby="in-week-accordion-header" data-bs-parent="#appointments-accordion">
+                        <div class="accordion-body">
+                            <div class="row">
+                                {% for appointment in appointments.in_week %}
+                                    {% include 'components/department-appointment.html' %}
+                                {% endfor %}
+                                {% no_appointments flag=appointments.in_week %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="in-month-accordion-header">
+                        <button class="accordion-button fs-4 fw-bold collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#in-month-accordion-body" aria-expanded="false"
+                                aria-controls="in-month-accordion-body">
+                            In a month
+                            {% if appointments.in_month|length %}
+                                <span class="badge badge-primary ms-3">{{ appointments.in_month|length }} available</span>
+                            {% else %}
+                                <span class="badge badge-light-dark ms-3">No appointments available</span>
+                            {% endif %}
+                        </button>
+                    </h2>
+                    <div id="in-month-accordion-body" class="accordion-collapse collapse"
+                         aria-labelledby="in-month-accordion-header" data-bs-parent="#appointments-accordion">
+                        <div class="accordion-body">
+                            <div class="row">
+                                {% for appointment in appointments.in_month %}
+                                    {% include 'components/department-appointment.html' %}
+                                {% endfor %}
+                                {% no_appointments flag=appointments.in_month %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="in-more-accordion-header">
+                        <button class="accordion-button fs-4 fw-bold collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#in-more-accordion-body" aria-expanded="false"
+                                aria-controls="in-more-accordion-body">
+                            More
+                            {% if appointments.more|length %}
+                                <span class="badge badge-primary ms-3">{{ appointments.more|length }} available</span>
+                            {% else %}
+                                <span class="badge badge-light-dark ms-3">No appointments available</span>
+                            {% endif %}
+                        </button>
+                    </h2>
+                    <div id="in-more-accordion-body" class="accordion-collapse collapse"
+                         aria-labelledby="in-more-accordion-header" data-bs-parent="#appointments-accordion">
+                        <div class="accordion-body">
+                            <div class="row">
+                                {% for appointment in appointments.more %}
+                                    {% include 'components/department-appointment.html' %}
+                                {% endfor %}
+                                {% no_appointments flag=appointments.more %}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
