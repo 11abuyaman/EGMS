@@ -64,7 +64,7 @@ class PatientSignup(View):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
-            return redirect('home')
+            return redirect('departments')
         else:
             return render(request, 'registration/signup.html', {'form': form, 'errors': form.errors.as_data()})
 
@@ -87,10 +87,10 @@ class EditProfile(LoginRequiredMixin, View):
         form = EditProfileForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
-        return redirect('edit-profile')
+        return redirect('profile', pk=request.user.pk)
 
 
-class CancelAppointment(UserIsStaffMixin, APIView):
+class CancelAppointment(LoginRequiredMixin, APIView):
     def post(self, request):
         user = request.user
         appointment_id = request.POST.get('id', None)
@@ -108,7 +108,7 @@ class CancelAppointment(UserIsStaffMixin, APIView):
         Response({'success': False}, status=403)
 
 
-class BookAppointment(UserIsStaffMixin, APIView):
+class BookAppointment(LoginRequiredMixin, APIView):
     def post(self, request):
         user = request.user
         appointment_id = request.POST.get('id', None)

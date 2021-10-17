@@ -49,3 +49,19 @@ class Appointment(models.Model):
 
     def appointment_passed(self):
         return self.date < timezone.now()
+
+
+class Medicine(models.Model):
+    name = models.CharField(max_length=250)
+
+    def __str__(self):
+        return self.name
+
+
+class Result(models.Model):
+    date = models.DateTimeField(auto_now_add=True)
+    patient = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='results', null=True, blank=True)
+    result_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='added_results')
+    remarks = models.TextField(blank=True, null=True)
+    file = models.FileField(blank=True, null=True)
+    medicines = models.ManyToManyField(Medicine)

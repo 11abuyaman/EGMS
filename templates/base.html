@@ -1346,7 +1346,7 @@
                 console.log('succeeded!');
                 $(`tr[data-appointment-id=${id}]`).remove();
                 $('#cancel-appointment-modal').modal('hide');
-                toastOut('appointment cancelled!', '', 'info');
+                toastOut('appointment cancelled!', '', 'error');
             }
         }
     }

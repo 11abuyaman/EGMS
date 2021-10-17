@@ -53,19 +53,6 @@
                                         </span>
                                         {{ profile_user.username }}
                                     </span>
-                                    <span class="d-flex align-items-center text-gray-400 me-5 mb-2">
-
-															<span class="svg-icon svg-icon-4 me-1">
-																<svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                                     height="24" viewBox="0 0 24 24" fill="none">
-																	<path opacity="0.3"
-                                                                          d="M18.0624 15.3453L13.1624 20.7453C12.5624 21.4453 11.5624 21.4453 10.9624 20.7453L6.06242 15.3453C4.56242 13.6453 3.76242 11.4453 4.06242 8.94534C4.56242 5.34534 7.46242 2.44534 11.0624 2.04534C15.8624 1.54534 19.9624 5.24534 19.9624 9.94534C20.0624 12.0453 19.2624 13.9453 18.0624 15.3453Z"
-                                                                          fill="black"/>
-																	<path d="M12.0624 13.0453C13.7193 13.0453 15.0624 11.7022 15.0624 10.0453C15.0624 8.38849 13.7193 7.04535 12.0624 7.04535C10.4056 7.04535 9.06241 8.38849 9.06241 10.0453C9.06241 11.7022 10.4056 13.0453 12.0624 13.0453Z"
-                                                                          fill="black"/>
-																</svg>
-															</span>
-                                        SF, Bay Area</span>
                                     {% if profile_user.phone %}
                                         <span class="d-flex align-items-center text-gray-400 text-hover-primary mb-2">
 
@@ -137,7 +124,7 @@
                                         <th class="min-w-200px">Doctor</th>
                                         <th class="min-w-125px">Department</th>
                                         <th class="min-w-125px">Status</th>
-                                        <th class="min-w-125px text-center">Cancel appointment</th>
+                                        <th class="min-w-125px text-center border-start">Cancel appointment</th>
                                     </tr>
                                     </thead>
 
@@ -198,40 +185,34 @@
 
                                     <thead class="border-gray-200 fs-5 fw-bold bg-lighten">
                                     <tr>
-                                        <th class="min-w-175px ps-9">Date</th>
-                                        <th class="min-w-75px px-0">ID</th>
-                                        <th class="min-w-200px">Doctor</th>
-                                        <th class="min-w-125px">Department</th>
-                                        <th class="min-w-125px">Status</th>
-                                        <th class="min-w-125px text-center">Cancel appointment</th>
+                                        <th>ID</th>
+                                        <th>Date</th>
+                                        <th>Result-by</th>
+                                        <th>Remarks</th>
+                                        <th>Medicines</th>
+                                        <th class="w-175px text-center border-start">File</th>
                                     </tr>
                                     </thead>
 
                                     <tbody class="fs-6 fw-bold text-gray-600">
-                                    {% for appointment in profile_user.p_appointments.all %}
+                                    {% for result in profile_user.results.all %}
                                         <tr>
-                                            <td class="ps-9">{{ appointment.appointment_passed }} {{ appointment.date }}</td>
-                                            <td class="ps-0">{{ appointment.id }}</td>
-                                            <td>{{ appointment.doctor.get_full_name }}</td>
-                                            <td>{{ appointment.department.name }}</td>
-                                            {% if appointment.appointment_passed %}
-                                                <td class="text-danger">Missed</td>
-                                                <td>
-                                                    <button class="btn btn-light w-100 btn-light-danger"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#cancel-appointment-modal">Cancel
-                                                    </button>
-                                                </td>
-                                            {% else %}
-                                                <td class="text-primary">Upcoming</td>
-                                                <td>
-                                                    <button class="btn btn-light w-100 btn-light-danger"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#cancel-appointment-modal">Cancel
-                                                    </button>
-                                                </td>
-                                            {% endif %}
-
+                                            <td>{{ result.id }}</td>
+                                            <td>{{ result.date }}</td>
+                                            <td>{{ result.result_by.get_full_name }}</td>
+                                            <td>{{ result.remarks }}</td>
+                                            <td>
+                                                {% for medicine in result.medicines.all %}
+                                                    <span class="text-primary">{{ medicine.name }}</span>
+                                                    {% if not forloop.last %}, {% endif %}
+                                                {% endfor %}
+                                            </td>
+                                            <td>
+                                                <a class="btn btn-light w-100 btn-light-primary" target="_blank"
+                                                   href="{{ result.file.url }}">
+                                                    View
+                                                </a>
+                                            </td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
