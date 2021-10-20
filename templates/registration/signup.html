@@ -1,6 +1,8 @@
 {% extends 'registration/reg-base.html' %}
 {% load widget_tweaks %}
 
+{% block page-title %}Signup{% endblock %}
+
 {% block content %}
     <div class="d-flex flex-column flex-lg-row-fluid py-10">
 
@@ -38,9 +40,21 @@
                         {{ form.username.errors }}
                     </div>
 
+                    <div class="fv-row mb-7">
+                        <label class="form-label fw-bolder text-dark fs-6">National number</label>
+                        {{ form.national_number|add_class:"form-control form-control-lg form-control-solid"|attr:"placeholder:123456789" }}
+                        {{ form.national_number.errors }}
+                    </div>
+
                     <div class="fv-row mb-5">
                         <label class="form-label fw-bolder text-dark fs-6">Phone</label>
                         {{ form.phone|add_class:"form-control form-control-lg form-control-solid"|attr:"placeholder:0789891728" }}
+                        {{ form.phone.errors }}
+                    </div>
+
+                    <div class="fv-row mb-5">
+                        <label class="form-label fw-bolder text-dark fs-6">Gender</label>
+                        {{ form.gender|add_class:"form-control form-control-lg form-control-solid"|attr:"placeholder:0789891728" }}
                         {{ form.phone.errors }}
                     </div>
 

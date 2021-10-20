@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load tags %}
+
+{% block title %}Periodic medication{% endblock %}
+
+{% block content %}
+
+    <div class="card mb-5 mb-xl-10">
+
+        <div class="card-header">
+            <div class="card-title m-0">
+                <h3 class="fw-bolder m-0">New periodic medication</h3>
+            </div>
+
+        </div>
+
+        <div id="kt_account_profile_details" class="collapse show">
+
+            <form class="form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card-body border-top p-9">
+
+                    <div class="row mb-6">
+
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Patient</label>
+
+                        <div class="col-lg-8">
+                            <select name="patient" aria-label="Select a patient" data-control="select2"
+                                    data-placeholder="Select a patient..." required
+                                    class="form-select form-select-solid form-select-lg fw-bold">
+                                <option value="">Pick a patient ..</option>
+                                {% for patient in patients %}
+                                    <option value="{{ patient.pk }}">{{ patient.get_full_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-6">
+
+                        <label class="col-lg-4 col-form-label fw-bold fs-6">
+                            <span class="required">Start date</span>
+                        </label>
+
+                        <div class="col-lg-8 fv-row">
+                            {{ form.start_date|add_class:"form-control form-control-lg form-control-solid date-picker"|attr:"placeholder:Pick date rage" }}
+                        </div>
+
+                    </div>
+                    <div class="row mb-6">
+
+                        <label class="col-lg-4 col-form-label fw-bold fs-6">
+                            <span class="required">End date</span>
+                        </label>
+
+                        <div class="col-lg-8 fv-row">
+                            {{ form.start_date|add_class:"form-control form-control-lg form-control-solid date-picker"|attr:"placeholder:Pick date rage" }}
+                        </div>
+
+                    </div>
+                    <div class="row mb-6">
+
+                        <label class="col-lg-4 col-form-label fw-bold fs-6">
+                            <span class="required">Medicine</span>
+                        </label>
+
+                        <div class="col-lg-8 fv-row">
+                            {{ form.medicine|add_class:"form-select form-select-solid form-select-lg fw-bold"|attr:"data-control:select2" }}
+                        </div>
+
+                    </div>
+
+                    <div class="row mb-6">
+
+                        <label class="col-lg-4 col-form-label fw-bold fs-6">
+                            <span class="required">Period</span>
+                        </label>
+
+                        <div class="col-lg-8 fv-row">
+                            {{ form.period|add_class:"form-select form-select-solid form-select-lg fw-bold"|attr:"data-control:select2" }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="card-footer d-flex justify-content-end py-6 px-9">
+                    <button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit">Add
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+{% endblock %}

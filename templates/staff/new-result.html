@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load tags %}
+
+{% block title %}Patient result{% endblock %}
+
+{% block content %}
+
+    <div class="card mb-5 mb-xl-10">
+
+        <div class="card-header">
+            <div class="card-title m-0">
+                <h3 class="fw-bolder m-0">New patient result</h3>
+            </div>
+
+        </div>
+
+        <div id="kt_account_profile_details" class="collapse show">
+
+            <form class="form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="result_by" value="{{ user.pk }}"/>
+                <div class="card-body border-top p-9">
+
+                    <div class="row mb-6">
+
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Patient</label>
+
+                        <div class="col-lg-8">
+                            <select name="patient" aria-label="Select a patient" data-control="select2"
+                                    data-placeholder="Select a patient..." required
+                                    class="form-select form-select-solid form-select-lg fw-bold">
+                                <option value="">Pick a patient ..</option>
+                                {% for patient in patients %}
+                                    <option value="{{ patient.pk }}">{{ patient.get_full_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label fw-bold fs-6 required">Medicines</label>
+                        <div class="col-lg-8">
+                            <select name="medicines" data-control="select2"
+                                    data-placeholder="Select medication..." multiple required
+                                    class="form-select form-select-solid form-select-lg fw-bold">
+                                <option value="">Pick a patient ..</option>
+                                {% for medicine in medicines %}
+                                    <option value="{{ medicine.pk }}">{{ medicine.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label fw-bold fs-6">Result file</label>
+                        <div class="col-lg-8">
+                            {{ form.file|add_class:"form-control" }}
+                            <div class="form-text">Allowed file types: pdf, txt ,png, jpg, jpeg.</div>
+                        </div>
+                    </div>
+                    <div class="row mb-6">
+
+                        <label class="col-lg-4 col-form-label fw-bold fs-6">
+                            <span class="required">Remarks</span>
+                        </label>
+
+                        <div class="col-lg-8 fv-row">
+                            {{ form.remarks|add_class:"form-control form-control-lg form-control-solid"|attr:"placeholder: Any result notes.."|attr:"rows:3" }}
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card-footer d-flex justify-content-end py-6 px-9">
+                    <button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit">Add
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+{% endblock %}

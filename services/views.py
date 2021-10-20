@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 
 from django.contrib.auth import login, authenticate
@@ -9,9 +10,11 @@ from django.views.generic import ListView, DetailView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from services.forms import SignUpForm, EditProfileForm
+from services.filters import PatientsFilter
+from services.forms import SignUpForm, EditProfileForm, PeriodicMedicationForm, ResultForm, EditPatientForm
 from services.mixins import UserIsStaffMixin
-from services.models import User, Appointment, Department
+from services.models import User, Appointment, Department, Medicine
+from django.contrib import messages
 
 
 class Home(LoginRequiredMixin, View):
@@ -87,6 +90,9 @@ class EditProfile(LoginRequiredMixin, View):
         form = EditProfileForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Patient profile updated successfully!')
+        else:
+            messages.error(request, 'Something went wrong!: {}'.format(form.errors))
         return redirect('profile', pk=request.user.pk)
 
 
@@ -124,3 +130,82 @@ class BookAppointment(LoginRequiredMixin, APIView):
             print(e)
 
         Response({'success': False}, status=403)
+
+
+class PatientsList(UserIsStaffMixin, View):
+    def get(self, request):
+        filters = PatientsFilter(request.GET, queryset=User.objects.filter(type='patient'))
+        patients = filters.qs
+        return render(request, 'staff/patients.html', {
+            "patients": patients,
+            "filters": filters.form
+        })
+
+
+class NewPeriodicMedication(UserIsStaffMixin, View):
+    def get(self, request):
+        form = PeriodicMedicationForm()
+        return render(request, 'staff/new-periodic-med.html',
+                      {"form": form, "patients": User.objects.filter(type='patient')})
+
+    def post(self, request):
+        form = PeriodicMedicationForm(request.POST)
+        if form.is_valid():
+            print('hi')
+            form.save()
+            messages.success(request, "Periodic medication has been added successfully!")
+        else:
+            messages.error(request, "Message sent.")
+
+        return redirect('staff-new-pm')
+
+
+class NewResult(UserIsStaffMixin, View):
+    def get(self, request):
+        form = ResultForm()
+        return render(request, 'staff/new-result.html', {
+            "form": form,
+            "patients": User.objects.filter(type='patient'),
+            "medicines": Medicine.objects.all()
+        })
+
+    def post(self, request):
+        form = ResultForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Result has been added successfully!")
+        else:
+            messages.error(request, form.errors)
+
+        return redirect('staff-new-result')
+
+
+class VerifyPatient(UserIsStaffMixin, APIView):
+    def post(self, request):
+        pk = request.POST.get('patient_id', None)
+        is_verified = request.POST.get('is_verified', None)
+        if is_verified:
+            try:
+                patient = User.objects.get(id=pk)
+                patient.verified = is_verified == 'true'
+                patient.save()
+                return Response({'success': True})
+            except Exception as e:
+                print(e)
+        return Response({'success': False}, status=403)
+
+
+class EditPatient(UserIsStaffMixin, APIView):
+    def post(self, request):
+        try:
+            patient_id = request.POST.get('id', None)
+
+            form = EditPatientForm(request.POST, instance=User.objects.get(pk=patient_id))
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Patient profile updated successfully!')
+            else:
+                messages.error(request, 'Something went wrong!: {}'.format(form.errors))
+        except Exception as e:
+            messages.error(request, 'Something went wrong!: {}'.format(e))
+        return redirect('staff-patients')

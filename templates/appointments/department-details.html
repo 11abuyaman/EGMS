@@ -31,7 +31,7 @@
                                 {% for appointment in appointments.in_week %}
                                     {% include 'components/department-appointment.html' %}
                                 {% endfor %}
-                                {% no_appointments flag=appointments.in_week %}
+                                {% no_results flag=appointments.in_week %}
                             </div>
                         </div>
                     </div>
@@ -57,7 +57,7 @@
                                 {% for appointment in appointments.in_month %}
                                     {% include 'components/department-appointment.html' %}
                                 {% endfor %}
-                                {% no_appointments flag=appointments.in_month %}
+                                {% no_results flag=appointments.in_month %}
                             </div>
                         </div>
                     </div>
@@ -83,7 +83,7 @@
                                 {% for appointment in appointments.more %}
                                     {% include 'components/department-appointment.html' %}
                                 {% endfor %}
-                                {% no_appointments flag=appointments.more %}
+                                {% no_results flag=appointments.more %}
 
                             </div>
                         </div>

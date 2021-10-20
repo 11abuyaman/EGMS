@@ -1,0 +1,316 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tags %}
+{% load widget_tweaks %}
+
+{% block page-title %}EGMS | patients{% endblock %}
+{% block title %}Patients{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">
+                <h3 class="m-0 text-gray-800">Patients list</h3>
+            </div>
+        </div>
+
+        <div class="card-body">
+
+            <div class="accordion" id="filters-accordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="filters-accordion_header_1">
+                        <button class="accordion-button fs-4 fw-bold" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#filters-accordion_body_1" aria-expanded="true"
+                                aria-controls="filters-accordion_body_1">
+                            Filters
+                        </button>
+                    </h2>
+                    <div id="filters-accordion_body_1" class="accordion-collapse collapse show"
+                         aria-labelledby="filters-accordion_header_1" data-bs-parent="#filters-accordion">
+                        <div class="accordion-body">
+                            <form>
+                                <div class="row mb-4">
+                                    <div class="form-group-sm col-6">
+                                        <label class="form-label">Patient name</label>
+                                        {{ filters.patient_name|add_class:"form-control"|attr:"placeholder:Nour Amin.." }}
+                                    </div>
+                                    <div class="form-group-sm col-6">
+                                        <label class="form-label">National number</label>
+                                        {{ filters.national_number|add_class:"form-control"|attr:"placeholder:123456789" }}
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary">Filter</button>
+                                <a href="{% url 'staff-patients' %}" class="btn btn-secondary ms-2">Reset</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+
+            <table class="table table-flush align-middle table-row-bordered table-row-solid gy-4 gs-9">
+
+                <thead class="border-gray-200 fs-5 fw-bold bg-lighten">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Country</th>
+                    <th>National #</th>
+                    <th>Gender</th>
+                    <th>Phone</th>
+                    <th class="text-center border-start">Verified</th>
+                    <th class="text-center border-start" style="width: 30%" colspan="2">Operations</th>
+                </tr>
+                </thead>
+
+                <tbody class="fs-6 fw-bold text-gray-600">
+                {% for patient in patients %}
+                    <tr
+                            data-patient-id="{{ patient.id }}"
+                            data-first-name="{{ patient.first_name }}"
+                            data-last-name="{{ patient.last_name }}"
+                            data-country="{{ patient.country }}"
+                            data-gender="{{ patient.gender }}"
+                            data-phone="{{ patient.phone }}"
+                            data-national-number="{{ patient.national_number }}"
+                            data-has-diabetes="{{ patient.has_diabetes }}"
+                            data-has-cancer="{{ patient.has_cancer }}"
+                            data-has-hypertension="{{ patient.has_hypertension }}"
+                            data-has-hyperlipidemia="{{ patient.has_hyperlipidemia }}"
+                    >
+                        <td>{{ patient.id }}</td>
+                        <td><a href="{% url 'profile' pk=patient.id %}" target="_blank">{{ patient.get_full_name }}</a>
+                        </td>
+                        <td>{{ patient.country|dash_if_none }}</td>
+                        <td>{{ patient.national_number }}</td>
+                        <td>{{ patient.gender }}</td>
+                        <td>{{ patient.phone|dash_if_none }}</td>
+                        <td class="text-center border-start">
+                            {% if patient.verified %}
+                                <i class="fas fa-check-circle text-success fs-3"></i>
+                            {% else %}
+                                <i class="fas fa-times-circle text-danger fs-3"></i>
+                            {% endif %}
+                        </td>
+                        <td class="border-start px-3" style="width: 15%;">
+                            <button onclick="openEditPatient(this)" class="btn btn-light-primary w-100"><i
+                                    class="las la-pencil-alt fs-3"></i>Edit
+                            </button>
+                        </td>
+                        <td style="width: 15%;">
+                            {% if patient.verified %}
+                                <button onclick="VerifyPatient({{ patient.id }},false,this)"
+                                        class="btn btn-light-danger w-100"><i
+                                        class="las la-times-circle fs-3"></i>Unverify
+                                </button>
+                            {% else %}
+                                <button onclick="VerifyPatient({{ patient.id }},true,this)"
+                                        class="btn btn-light-success w-100"><i
+                                        class="las la-check-circle fs-3"></i>Verify
+                                </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% no_results flag=patients.count title='No match!' message="We couldn't find any patients that match what you're looking for." %}
+        </div>
+    </div>
+
+    <div class="modal fade" tabindex="-1" id="edit-patient-modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit patient info</h5>
+
+
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                         aria-label="Close">
+                        <span class="svg-icon svg-icon-2x"></span>
+                    </div>
+
+                </div>
+
+                <div class="modal-body">
+                    <form id="edit-patient-form" action="{% url 'staff-api-edit-patient' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" id="edit-patient-id" name="id">
+                        <div class="row">
+                            <div class="form-group col-6 mb-4">
+                                <label for="edit-patient-first_name" class="form-label required">First name</label>
+                                <input type="text" name="first_name" class="form-control form-control-solid"
+                                       id="edit-patient-first_name"
+                                       required/>
+                            </div>
+                            <div class="form-group col-6 mb-4">
+                                <label for="edit-patient-last_name" class="form-label required">Last name</label>
+                                <input type="text" name="last_name" class="form-control form-control-solid" required
+                                       id="edit-patient-last_name"/>
+                            </div>
+                            <div class="form-group col-6 mb-4">
+                                <label for="edit-patient-last_name" class="form-label">Country</label>
+                                <select name="country" aria-label="Select a Country" data-control="select2"
+                                        data-dropdown-parent="#edit-patient-modal"
+                                        id="edit-patient-country"
+                                        data-placeholder="Select a country..."
+                                        class="form-select form-select-solid form-select-lg fw-bold">
+                                    {% include 'components/countries-options.html' %}
+                                </select>
+                            </div>
+                            <div class="form-group col-6 mb-4">
+                                <label for="edit-patient-national_number" class="form-label required">National
+                                    number</label>
+                                <input type="text" name="national_number" class="form-control form-control-solid"
+                                       required
+                                       id="edit-patient-national_number"/>
+                            </div>
+                            <div class="form-group col-6 mb-4">
+                                <label for="edit-patient-gender" class="form-label required">Gender</label>
+                                <select name="gender" aria-label="Select a Country" data-control="select2"
+                                        data-dropdown-parent="#edit-patient-modal"
+                                        data-placeholder="Select a country..."
+                                        class="form-select form-select-solid form-select-lg fw-bold">
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-6 mb-6">
+                                <label for="edit-patient-phone" class="form-label">Phone</label>
+                                <input type="text" name="phone" class="form-control form-control-solid"
+                                       required
+                                       id="edit-patient-phone"/>
+                            </div>
+                            <div class="form-group col-6 mb-4">
+                                <div data-kt-buttons="true">
+                                    <label class="btn btn-outline btn-outline-dashed d-flex flex-stack text-start p-6 ">
+                                        <div class="d-flex align-items-center me-2">
+                                            <div class="form-check form-check-custom form-check-solid form-check-primary me-6">
+                                                <input class="form-check-input" type="checkbox" name="has_diabetes"
+                                                       id="edit-patient-has_diabetes"
+                                                       value="startup"/>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h5 class="d-flex align-items-center fs-4 fw-bolder mb-1 flex-wrap">
+                                                    Diabetes</h5>
+                                                <div class="fs-6 opacity-50">
+                                                    Check if the patient has diabetes
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group col-6 mb-4">
+                                <div data-kt-buttons="true">
+                                    <label class="btn btn-outline btn-outline-dashed d-flex flex-stack text-start p-6 ">
+                                        <div class="d-flex align-items-center me-2">
+                                            <div class="form-check form-check-custom form-check-solid form-check-primary me-6">
+                                                <input class="form-check-input" type="checkbox" name="has_cancer"
+                                                       id="edit-patient-has_cancer"
+                                                       value="startup"/>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h5 class="d-flex align-items-center fs-4 fw-bolder mb-1 flex-wrap">
+                                                    Cancer</h5>
+                                                <div class="fs-6 opacity-50">
+                                                    Check if the patient has cancer
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group col-6 mb-4">
+                                <div data-kt-buttons="true">
+                                    <label class="btn btn-outline btn-outline-dashed d-flex flex-stack text-start p-6 ">
+                                        <div class="d-flex align-items-center me-2">
+                                            <div class="form-check form-check-custom form-check-solid form-check-primary me-6">
+                                                <input class="form-check-input" type="checkbox" name="has_hypertension"
+                                                       id="edit-patient-has_hypertension"
+                                                       value="startup"/>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h5 class="d-flex align-items-center fs-4 fw-bolder mb-1 flex-wrap">
+                                                    Hypertension</h5>
+                                                <div class="fs-6 opacity-50">
+                                                    Check if the patient has hypertension
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group col-6 mb-4">
+                                <div data-kt-buttons="true">
+                                    <label class="btn btn-outline btn-outline-dashed d-flex flex-stack text-start p-6 ">
+                                        <div class="d-flex align-items-center me-2">
+                                            <div class="form-check form-check-custom form-check-solid form-check-primary me-6">
+                                                <input class="form-check-input" type="checkbox"
+                                                       name="has_hyperlipidemia" id="edit-patient-has_hyperlipidemia"
+                                                       value="startup"/>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h5 class="d-flex align-items-center fs-4 fw-bolder mb-1 flex-wrap">
+                                                    Hyperlipidemia</h5>
+                                                <div class="opacity-50 fs-6">
+                                                    Check if the patient has hyperlipidemia
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                    <button form="edit-patient-form" type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script>
+        function openEditPatient(btn) {
+            let row = $(btn).closest('tr');
+            $('#edit-patient-first_name').val(row.attr('data-first-name'))
+            $('#edit-patient-last_name').val(row.attr('data-last-name'))
+            $('#edit-patient-national_number').val(row.attr('data-national-number'))
+            $('#edit-patient-country').val(row.attr('data-country')).trigger('change')
+            $('#edit-patient-phone').val(row.attr('data-phone'))
+            $('#edit-patient-id').val(row.attr('data-patient-id'))
+            $('#edit-patient-gender').val(row.attr('data-gender')).trigger('change')
+            $('#edit-patient-has_hyperlipidemia').attr('checked', row.attr('data-has-hyperlipidemia') == 'True')
+            $('#edit-patient-has_cancer').attr('checked', row.attr('data-has-cancer') == 'True')
+            $('#edit-patient-has_diabetes').attr('checked', row.attr('data-has-diabetes') == 'True')
+            $('#edit-patient-has_hypertension').attr('checked', row.attr('data-has-hypertension') == 'True')
+            $('#edit-patient-modal').modal('show');
+        }
+
+        async function VerifyPatient(patient_id, is_verified, btn) {
+            try {
+                let body = new FormData();
+                body.append('patient_id', JSON.stringify(patient_id));
+                body.append('is_verified', JSON.stringify(is_verified));
+                let response = await fetch('{% url 'staff-api-verification' %}', {
+                    body,
+                    method: 'post',
+                    headers: {
+                        "X-CSRFToken": getCookie("csrftoken")
+                    }
+                });
+                if (response.status == 200) {
+                    toastOut('Updated', 'Patient verification updated!', 'success')
+                    setTimeout(() => window.location.reload(), 500)
+                }
+            } catch (e) {
+                toastOut('Error', 'Something went wrong!', 'error')
+            }
+        }
+    </script>
+{% endblock %}

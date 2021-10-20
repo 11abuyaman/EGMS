@@ -1,30 +1,36 @@
-{% load static %}
-<!DOCTYPE html>
+{% load static %}<!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <base href="../../../">
-    <title>{% block title %}{% endblock %}</title>
+    <base href="../">
+    <title>{% block page-title %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta charset="utf-8"/>
-    <link rel="canonical" href="Https://preview.keenthemes.com/metronic8"/>
+
     <link rel="shortcut icon" href="assets/media/logos/favicon.ico"/>
+
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700"/>
+
     <link href="{% static 'services/assets/plugins/global/plugins.bundle.css' %}" rel="stylesheet" type="text/css"/>
     <link href="{% static 'services/assets/css/style.bundle.css' %}" rel="stylesheet" type="text/css"/>
-    <style>
-        ul.errorlist {
-            margin-top: 10px;
-            color: var(--bs-red);
-        }
-    </style>
+    <link href="{% static 'services/assets/css/main.css' %}" rel="stylesheet" type="text/css"/>
+
+    <script src="{% static 'services/assets/plugins/global/plugins.bundle.js' %}"></script>
+    <script src="{% static 'services/assets/js/scripts.bundle.js' %}"></script>
+    <script src="{% static 'services/assets/js/custom/widgets.js' %}"></script>
 </head>
 
-<body id="kt_body" class="bg-body">
+<body id="kt_body"
+      class="header-fixed header-tablet-and-mobile-fixed toolbar-enabled toolbar-fixed aside-enabled aside-fixed"
+      style="--kt-toolbar-height:55px;--kt-toolbar-height-tablet-and-mobile:55px">
+
 {% block body %}{% endblock %}
-<script src="{% static 'services/assets/plugins/global/plugins.bundle.js' %}"></script>
-<script src="{% static 'services/assets/js/scripts.bundle.js' %}"></script>
-<script src="{% static 'services/assets/js/custom/authentication/sign-in/general.js' %}"></script>
+<script>
+    $(".date-picker").daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true,
+        minYear: 2021,
+    });
+</script>
 <script>
     function getCookie(name) {
         let cookieValue = null;
@@ -41,6 +47,35 @@
         }
         return cookieValue;
     }
+
+    function toastOut(title, message, type) {
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-bottom-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "2500",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+        if (type == 'success')
+            toastr.success(message, title);
+        else if (type == 'error')
+            toastr.error(message, title);
+        else if (type == 'warning')
+            toastr.warning(message, title);
+        else if (type == 'info')
+            toastr.info(message, title);
+    }
 </script>
+{% block js %}{% endblock %}
 </body>
 </html>
