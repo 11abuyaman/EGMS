@@ -11,7 +11,7 @@
             <div class="w-lg-600px p-10 p-lg-15 mx-auto">
                 <form class="form w-100" novalidate="novalidate" id="kt_sign_up_form" method="post">
                     {% csrf_token %}
-
+                    <input type="hidden" name="type" value="patient">
                     <div class="mb-10 text-center">
                         <h1 class="text-dark mb-3">Create an Account</h1>
                         <div class="text-gray-400 fw-bold fs-4">Already have an account?

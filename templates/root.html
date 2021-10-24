@@ -25,10 +25,15 @@
 
 {% block body %}{% endblock %}
 <script>
+    function formatDate(date) {
+        return (((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear());
+    }
+
     $(".date-picker").daterangepicker({
         singleDatePicker: true,
         showDropdowns: true,
-        minYear: 2021,
+        timePicker: true,
+        minDate: formatDate(new Date()),
     });
 </script>
 <script>
@@ -75,6 +80,23 @@
         else if (type == 'info')
             toastr.info(message, title);
     }
+</script>
+<script>
+    let getUrlParameter = function getUrlParameter(sParam) {
+        let sPageURL = window.location.search.substring(1),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return typeof sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+            }
+        }
+        return false;
+    };
 </script>
 {% block js %}{% endblock %}
 </body>

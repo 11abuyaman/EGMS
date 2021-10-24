@@ -1,17 +1,19 @@
 from django.contrib import admin
+from django.shortcuts import redirect
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
 from services.views import PatientSignup, LoginRedirect, Profile, CancelAppointment, DepartmentsList, \
     DepartmentAppointments, Home, BookAppointment, EditProfile, PatientsList, NewPeriodicMedication, NewResult, \
-    VerifyPatient, EditPatient
+    VerifyPatient, EditPatient, NewAppointment
 
 urlpatterns = [
                   path('admin/', admin.site.urls),
                   path('accounts/', include('django.contrib.auth.urls')),
                   path('accounts/signup/', PatientSignup.as_view(), name='signup'),
-                  path('', Home.as_view(), name='home'),
+                  path('home', Home.as_view(), name='home'),
+                  path('', lambda req: redirect('home')),
                   path('login/redirect/', LoginRedirect.as_view(), name='login-redirect'),
 
                   path('profile/edit/', EditProfile.as_view(), name='edit-profile'),
@@ -25,6 +27,7 @@ urlpatterns = [
 
                   path('staff/patients/', PatientsList.as_view(), name='staff-patients'),
                   path('staff/new/periodic-medication/', NewPeriodicMedication.as_view(), name='staff-new-pm'),
+                  path('staff/new/appointment/', NewAppointment.as_view(), name='staff-new-appointment'),
                   path('staff/new/result/', NewResult.as_view(), name='staff-new-result'),
                   path('staff/api/verification/', VerifyPatient.as_view(), name='staff-api-verification'),
                   path('staff/api/edit-patient/', EditPatient.as_view(), name='staff-api-edit-patient'),

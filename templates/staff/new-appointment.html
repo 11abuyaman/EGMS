@@ -3,8 +3,8 @@
 {% load widget_tweaks %}
 {% load tags %}
 
-{% block page-title %}EGMS | New patient result{% endblock %}
-{% block title %}Patient result{% endblock %}
+{% block page-title %}EGMS | New Appointment{% endblock %}
+{% block title %}Appointments{% endblock %}
 
 {% block content %}
 
@@ -12,7 +12,7 @@
 
         <div class="card-header">
             <div class="card-title m-0">
-                <h3 class="fw-bolder m-0">New patient result</h3>
+                <h3 class="fw-bolder m-0">New appointment</h3>
             </div>
 
         </div>
@@ -26,38 +26,29 @@
 
                     <div class="row mb-6">
 
-                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Patient</label>
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Doctor</label>
 
                         <div class="col-lg-8">
-                            {{ form.patient|add_class:"form-select form-select-solid form-select-lg fw-bold"|attr:"data-control:select2" }}
+                            {{ form.doctor|add_class:"form-select form-select-solid form-select-lg fw-bold"|attr:"data-control:select2"|attr:"placeholder:Select a doctor..." }}
                         </div>
                     </div>
                     <div class="row mb-6">
-                        <label class="col-lg-4 col-form-label fw-bold fs-6">Medicines</label>
-                        <div class="col-lg-8">
-                            {{ form.medicines|add_class:"form-select form-select-solid form-select-lg fw-bold"|attr:"data-control:select2" }}
-                        </div>
-                    </div>
+                        <label class="col-lg-4 col-form-label fw-bold fs-6 required select2">Department</label>
 
-                    <div class="row mb-6">
-                        <label class="col-lg-4 col-form-label fw-bold fs-6">Result file</label>
                         <div class="col-lg-8">
-                            {{ form.file|add_class:"form-control form-control-solid" }}
-                            <div class="form-text">Allowed file types: pdf, txt ,png, jpg, jpeg.</div>
+                            {{ form.department|add_class:"form-select form-select-solid form-select-lg fw-bold"|attr:"data-control:select2" }}
                         </div>
                     </div>
                     <div class="row mb-6">
-
                         <label class="col-lg-4 col-form-label fw-bold fs-6">
-                            <span class="required">Remarks</span>
+                            <span class="required">Date & time</span>
                         </label>
-
                         <div class="col-lg-8 fv-row">
-                            {{ form.remarks|add_class:"form-control form-control-lg form-control-solid"|attr:"placeholder: Any result notes.."|attr:"rows:3" }}
+                            {{ form.date|add_class:"form-select form-select-solid form-select-lg date-picker"|attr:"placeholder:Pick date rage" }}
                         </div>
-
                     </div>
                 </div>
+
 
                 <div class="card-footer d-flex justify-content-end py-6 px-9">
                     <button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit">Add

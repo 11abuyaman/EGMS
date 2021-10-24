@@ -11,7 +11,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from services.filters import PatientsFilter
-from services.forms import SignUpForm, EditProfileForm, PeriodicMedicationForm, ResultForm, EditPatientForm
+from services.forms import SignUpForm, EditProfileForm, PeriodicMedicationForm, ResultForm, EditPatientForm, \
+    AppointmentForm
 from services.mixins import UserIsStaffMixin
 from services.models import User, Appointment, Department, Medicine
 from django.contrib import messages
@@ -20,13 +21,17 @@ from django.contrib import messages
 class Home(LoginRequiredMixin, View):
     def get(self, request):
         if request.user.type == 'patient':
-            return redirect('profile', pk=request.user.pk)
+            return render(request, "home/home.patient.html")
+        elif request.user.is_staff:
+            return render(request, "home/home.staff.html")
 
 
 class LoginRedirect(LoginRequiredMixin, View):
     def get(self, request):
         if request.user.type == 'patient':
-            return redirect('profile', pk=request.user.pk)
+            return redirect('home')
+        elif request.user.is_staff:
+            return redirect('home')
 
 
 class DepartmentsList(LoginRequiredMixin, ListView):
@@ -145,13 +150,13 @@ class PatientsList(UserIsStaffMixin, View):
 class NewPeriodicMedication(UserIsStaffMixin, View):
     def get(self, request):
         form = PeriodicMedicationForm()
+        form.fields["patient"].queryset = User.objects.filter(type='patient')
         return render(request, 'staff/new-periodic-med.html',
                       {"form": form, "patients": User.objects.filter(type='patient')})
 
     def post(self, request):
         form = PeriodicMedicationForm(request.POST)
         if form.is_valid():
-            print('hi')
             form.save()
             messages.success(request, "Periodic medication has been added successfully!")
         else:
@@ -163,10 +168,9 @@ class NewPeriodicMedication(UserIsStaffMixin, View):
 class NewResult(UserIsStaffMixin, View):
     def get(self, request):
         form = ResultForm()
+        form.fields["patient"].queryset = User.objects.filter(type='patient')
         return render(request, 'staff/new-result.html', {
-            "form": form,
-            "patients": User.objects.filter(type='patient'),
-            "medicines": Medicine.objects.all()
+            "form": form
         })
 
     def post(self, request):
@@ -178,6 +182,25 @@ class NewResult(UserIsStaffMixin, View):
             messages.error(request, form.errors)
 
         return redirect('staff-new-result')
+
+
+class NewAppointment(UserIsStaffMixin, View):
+    def get(self, request):
+        form = AppointmentForm()
+        form.fields["doctor"].queryset = User.objects.filter(type='doctor')
+        return render(request, 'staff/new-appointment.html', {
+            "form": form,
+        })
+
+    def post(self, request):
+        form = AppointmentForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Appointment has been added successfully!")
+        else:
+            messages.error(request, form.errors)
+
+        return redirect('staff-new-appointment')
 
 
 class VerifyPatient(UserIsStaffMixin, APIView):

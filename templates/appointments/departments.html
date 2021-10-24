@@ -6,11 +6,20 @@
     <div class="card mb-2">
         <div class="card-body fs-6 py-15 px-10 py-lg-15 px-lg-15 text-gray-700">
             <div class="row g-5">
+                {% if user.type == 'patient' %}
+                    <div class="border-dashed p-4 mb-4 d-flex align-items-center">
+                        <i class="fs-4x las la-traffic-light me-3"></i>
+                        <div>
+                            <h3>First pick a department,</h3>
+                            <div class="text-muted">Pick a the department you want to have an appointment at.</div>
+                        </div>
+                    </div>
+                {% endif %}
                 <h1 class="anchor fw-bolder mb-5" id="departments">Departments</h1>
                 {% for department in object_list %}
 
                     <div class="col-lg-4">
-                        <div class="card card-stretch card-bordered mb-5 department hover-3d {% if department.appointments.count == 0 %}disabled{% endif %}">
+                        <div class="card card-stretch card-bordered mb-5 department hover-3d {% if department.number_of_appointments == 0 %}disabled{% endif %}">
 
                             <div class="card-body p-0">
                                 {% if  department.picture %}
@@ -21,13 +30,13 @@
                                         <h3 class="card-title m-0">{{ department.name }}</h3>
                                         <div class="card-toolbar m-0">
                                             <span type="button"
-                                                  class="btn border btn-sm btn-light-{% if department.appointments.count == 0 %}dark disabled{% else %}success{% endif %}">{{ department.appointments.count }}
+                                                  class="btn border btn-sm btn-light-{% if department.number_of_appointments == 0 %}dark disabled{% else %}success{% endif %}">{{ department.number_of_appointments }}
                                                 available
                                             </span>
                                         </div>
                                     </div>
                                     <a href="{% url 'department' department.id %}"
-                                       class="btn w-100 btn-primary {% if department.appointments.count == 0 %}disabled{% endif %}">View
+                                       class="btn w-100 btn-primary {% if department.number_of_appointments == 0 %}disabled{% endif %}">View
                                         appointments
                                     </a>
                                 </div>

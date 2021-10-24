@@ -24,6 +24,9 @@ class User(AbstractUser):
     has_hypertension = models.BooleanField(default=False)
     has_hyperlipidemia = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.get_full_name()
+
     def get_profile_picture(self):
         if self.profile_picture:
             return self.profile_picture.url
@@ -38,6 +41,9 @@ class Department(models.Model):
     def __str__(self):
         return self.name
 
+    def number_of_appointments(self):
+        return self.appointments.filter(patient=None, date__gte=datetime.datetime.today()).count()
+
 
 class Appointment(models.Model):
     date = models.DateTimeField()
@@ -47,12 +53,10 @@ class Appointment(models.Model):
 
     def is_this_week(self):
         d = self.date
-        now = datetime.datetime.now()
         return (d - timezone.now()).days < 7
 
     def is_this_month(self):
         d = self.date
-        now = datetime.datetime.now()
         return (d - timezone.now()).days < 30
 
     def appointment_passed(self):
@@ -68,11 +72,11 @@ class Medicine(models.Model):
 
 class Result(models.Model):
     date = models.DateTimeField(auto_now_add=True)
-    patient = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='results', null=True, blank=True)
+    patient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='results')
     result_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='added_results')
-    remarks = models.TextField(blank=True, null=True)
+    remarks = models.TextField()
     file = models.FileField(blank=True, null=True)
-    medicines = models.ManyToManyField(Medicine)
+    medicines = models.ManyToManyField(Medicine, blank=True)
 
 
 class PeriodicMedication(models.Model):

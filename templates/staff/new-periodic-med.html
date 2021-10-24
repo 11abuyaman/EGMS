@@ -3,6 +3,7 @@
 {% load widget_tweaks %}
 {% load tags %}
 
+{% block page-title %}EGMS | New periodic medication{% endblock %}
 {% block title %}Periodic medication{% endblock %}
 
 {% block content %}
@@ -23,18 +24,10 @@
                 <div class="card-body border-top p-9">
 
                     <div class="row mb-6">
-
                         <label class="col-lg-4 col-form-label required fw-bold fs-6">Patient</label>
 
                         <div class="col-lg-8">
-                            <select name="patient" aria-label="Select a patient" data-control="select2"
-                                    data-placeholder="Select a patient..." required
-                                    class="form-select form-select-solid form-select-lg fw-bold">
-                                <option value="">Pick a patient ..</option>
-                                {% for patient in patients %}
-                                    <option value="{{ patient.pk }}">{{ patient.get_full_name }}</option>
-                                {% endfor %}
-                            </select>
+                            {{ form.patient|add_class:"form-select form-select-solid form-select-lg fw-bold"|attr:"data-control:select2" }}
                         </div>
                     </div>
 
@@ -56,7 +49,7 @@
                         </label>
 
                         <div class="col-lg-8 fv-row">
-                            {{ form.start_date|add_class:"form-control form-control-lg form-control-solid date-picker"|attr:"placeholder:Pick date rage" }}
+                            {{ form.end_date|add_class:"form-control form-control-lg form-control-solid date-picker"|attr:"placeholder:Pick date rage" }}
                         </div>
 
                     </div>

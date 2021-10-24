@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            <div class="front-boxes-container">
+                <h2>Operations</h2>
+                <div class="d-flex">
+                    <a class="front-box-container" href="{% url 'departments' %}">
+                        <div class="front-box-icon-container bg-success">
+                            <i class=" front-box-icon las la-calendar"></i>
+                            <span class="front-box-tag">
+                        <i class="las la-plus" aria-hidden="true"></i>
+                    </span>
+                        </div>
+                        <div class="front-box-info">
+                            <span>New Appointment</span>
+                        </div>
+                    </a>
+                    <a class="front-box-container" href="{% url 'edit-profile' %}">
+                        <div class="front-box-icon-container">
+                            <i class="front-box-icon las la-user-edit"></i>
+                            <span class="front-box-tag">
+                                <i class="las la-pen"></i>
+                    </span>
+                        </div>
+                        <div class="front-box-info">
+                            <span>Edit Account</span>
+                        </div>
+                    </a>
+                    <a class="front-box-container" href="{% url 'profile' user.pk %}">
+                        <div class="front-box-icon-container">
+                            <i class="front-box-icon las la-user"></i>
+                            <span class="front-box-tag">
+                                <i class="las la-angle-right"></i>
+                            </span>
+                        </div>
+                        <div class="front-box-info">
+                            <span>My profile</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="front-boxes-container">
+                <h2>My Information</h2>
+                <div class="d-flex">
+                    <a class="front-box-container" href="{% url 'profile' user.pk %}">
+                        <div class="front-box-icon-container">
+                            <i class="front-box-icon las la-file-invoice"></i>
+                            <span class="front-box-tag">
+                        <i class="las la-plus" aria-hidden="true"></i>
+                    </span>
+                        </div>
+                        <div class="front-box-info">
+                            <span>My Appointments</span>
+                        </div>
+                    </a>
+                    <a class="front-box-container" href="{% url 'profile' user.pk %}?active_tab=results">
+                        <div class="front-box-icon-container">
+                            <i class="front-box-icon las la-file-invoice"></i>
+                            <span class="front-box-tag">
+                        <i class="las la-plus" aria-hidden="true"></i>
+                    </span>
+                        </div>
+                        <div class="front-box-info">
+                            <span>My Results</span>
+                        </div>
+                    </a>
+                    <a class="front-box-container" href="{% url 'profile' user.pk %}?active_tab=medicines">
+                        <div class="front-box-icon-container">
+                            <i class="front-box-icon las la-capsules"></i>
+                            <span class="front-box-tag">
+                        <i class="las la-plus" aria-hidden="true"></i>
+                    </span>
+                        </div>
+                        <div class="front-box-info">
+                            <span>My medication</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

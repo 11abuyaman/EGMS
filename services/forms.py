@@ -1,14 +1,13 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User, PeriodicMedication, Result
+from .models import User, PeriodicMedication, Result, Appointment
 
 
 class SignUpForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = User
         fields = UserCreationForm.Meta.fields + (
-            'first_name', 'last_name', 'phone', 'gender', 'national_number', 'has_cancer', 'has_hypertension',
-            'has_hyperlipidemia', 'has_diabetes'
+            'first_name', 'last_name', 'phone', 'gender', 'national_number', 'type'
         )
 
 
@@ -35,3 +34,9 @@ class ResultForm(forms.ModelForm):
     class Meta:
         model = Result
         fields = ['file', 'patient', 'remarks', 'medicines', 'result_by']
+
+
+class AppointmentForm(forms.ModelForm):
+    class Meta:
+        model = Appointment
+        fields = ['date', 'department', 'doctor']

@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            <div class="front-boxes-container">
+                <h2>Operations</h2>
+                <div class="d-flex">
+                    <a class="front-box-container" href="{% url 'staff-new-appointment' %}">
+                        <div class="front-box-icon-container">
+                            <i class=" front-box-icon las la-calendar"></i>
+                            <span class="front-box-tag">
+                        <i class="las la-plus" aria-hidden="true"></i>
+                    </span>
+                        </div>
+                        <div class="front-box-info">
+                            <span>New Appointment</span>
+                        </div>
+                    </a>
+                    <a class="front-box-container" href="{% url 'staff-new-result' %}">
+                        <div class="front-box-icon-container">
+                            <i class="front-box-icon las la-file-invoice"></i>
+                            <span class="front-box-tag">
+                        <i class="las la-plus" aria-hidden="true"></i>
+                    </span>
+                        </div>
+                        <div class="front-box-info">
+                            <span>New Result</span>
+                        </div>
+                    </a>
+                    <a class="front-box-container" href="{% url 'staff-new-pm' %}">
+                        <div class="front-box-icon-container">
+                            <i class="front-box-icon las la-capsules"></i>
+                            <span class="front-box-tag">
+                        <i class="las la-plus" aria-hidden="true"></i>
+                    </span>
+                        </div>
+                        <div class="front-box-info">
+                            <span>Periodic medication</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="front-boxes-container">
+                <h2>Lists </h2>
+                <div class="d-flex">
+                    <a class="front-box-container" href="{% url 'staff-patients' %}">
+                        <div class="front-box-icon-container">
+                            <i class=" front-box-icon las la-users"></i>
+                            <span class="front-box-tag">
+                        <i class="fas fa-list" aria-hidden="true"></i>
+                    </span>
+                        </div>
+                        <div class="front-box-info">
+                            <span>Patients</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
