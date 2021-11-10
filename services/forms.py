@@ -7,7 +7,7 @@ class SignUpForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = User
         fields = UserCreationForm.Meta.fields + (
-            'first_name', 'last_name', 'phone', 'gender', 'national_number', 'type'
+            'first_name', 'last_name', 'phone', 'gender', 'national_number', 'type', 'is_staff'
         )
 
 
@@ -22,6 +22,12 @@ class EditPatientForm(forms.ModelForm):
         model = User
         fields = ['first_name', 'last_name', 'phone', 'national_number', 'country', 'gender', 'has_diabetes',
                   'has_cancer', 'has_hypertension', 'has_hyperlipidemia', ]
+
+
+class EditStaffForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'phone', 'national_number', 'gender']
 
 
 class PeriodicMedicationForm(forms.ModelForm):

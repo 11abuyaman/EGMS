@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 
 from services.views import PatientSignup, LoginRedirect, Profile, CancelAppointment, DepartmentsList, \
     DepartmentAppointments, Home, BookAppointment, EditProfile, PatientsList, NewPeriodicMedication, NewResult, \
-    VerifyPatient, EditPatient, NewAppointment
+    VerifyPatient, EditPatient, NewAppointment, StaffList, EditStaff
 
 urlpatterns = [
                   path('admin/', admin.site.urls),
@@ -26,11 +26,13 @@ urlpatterns = [
                   path('departments/<int:pk>', DepartmentAppointments.as_view(), name='department'),
 
                   path('staff/patients/', PatientsList.as_view(), name='staff-patients'),
+                  path('staff/list/', StaffList.as_view(), name='staff-list'),
                   path('staff/new/periodic-medication/', NewPeriodicMedication.as_view(), name='staff-new-pm'),
                   path('staff/new/appointment/', NewAppointment.as_view(), name='staff-new-appointment'),
                   path('staff/new/result/', NewResult.as_view(), name='staff-new-result'),
                   path('staff/api/verification/', VerifyPatient.as_view(), name='staff-api-verification'),
                   path('staff/api/edit-patient/', EditPatient.as_view(), name='staff-api-edit-patient'),
+                  path('staff/api/edit-staff/', EditStaff.as_view(), name='staff-api-edit-staff'),
 
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL,
                                                                                            document_root=settings.MEDIA_ROOT)

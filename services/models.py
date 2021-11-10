@@ -8,6 +8,7 @@ from django.utils import timezone
 class User(AbstractUser):
     TYPE_CHOICES = [
         ('doctor', 'Doctor'),
+        ('staff', 'Staff'),
         ('patient', 'Patient'),
     ]
     phone = models.CharField(max_length=100, null=True, blank=True)

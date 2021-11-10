@@ -1,8 +1,5 @@
-import json
 from datetime import datetime
-
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
@@ -147,6 +144,27 @@ class PatientsList(UserIsStaffMixin, View):
         })
 
 
+class StaffList(UserIsStaffMixin, View):
+    def get(self, request):
+        filters = PatientsFilter(request.GET, queryset=User.objects.filter(is_staff=True))
+        staff = filters.qs
+        form = SignUpForm()
+        return render(request, 'staff/staff.html', {
+            "staff": staff,
+            "filters": filters.form,
+            "form": form
+        })
+
+    def post(self, request):
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Staff account has been added successfully!")
+        else:
+            messages.error(request, form.errors)
+        return redirect('staff-list')
+
+
 class NewPeriodicMedication(UserIsStaffMixin, View):
     def get(self, request):
         form = PeriodicMedicationForm()
@@ -232,3 +250,18 @@ class EditPatient(UserIsStaffMixin, APIView):
         except Exception as e:
             messages.error(request, 'Something went wrong!: {}'.format(e))
         return redirect('staff-patients')
+
+
+class EditStaff(UserIsStaffMixin, APIView):
+    def post(self, request):
+        try:
+            staff_id = request.POST.get('id', None)
+            form = EditPatientForm(request.POST, instance=User.objects.get(pk=staff_id))
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Staff account updated successfully!')
+            else:
+                messages.error(request, 'Something went wrong!: {}'.format(form.errors))
+        except Exception as e:
+            messages.error(request, 'Something went wrong!: {}'.format(e))
+        return redirect('staff-list')
