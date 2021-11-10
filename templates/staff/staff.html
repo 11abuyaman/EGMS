@@ -1,0 +1,274 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tags %}
+{% load widget_tweaks %}
+
+{% block page-title %}EGMS | Staff{% endblock %}
+{% block title %}Manage staff{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title d-flex w-100 justify-content-between">
+                <h3 class="m-0 text-gray-800">Staff list</h3>
+                <button onclick="openAddPatient(this)" class="btn btn-light-primary">
+                    <i class="las la-plus fs-3"></i>Add
+                </button>
+            </div>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="accordion" id="filters-accordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="filters-accordion_header_1">
+                        <button class="accordion-button fs-4 fw-bold" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#filters-accordion_body_1" aria-expanded="true"
+                                aria-controls="filters-accordion_body_1">
+                            Filters
+                        </button>
+                    </h2>
+                    <div id="filters-accordion_body_1" class="accordion-collapse collapse show"
+                         aria-labelledby="filters-accordion_header_1" data-bs-parent="#filters-accordion">
+                        <div class="accordion-body">
+                            <form>
+                                <div class="row mb-4">
+                                    <div class="form-group-sm col-6">
+                                        <label class="form-label">Staff name</label>
+                                        {{ filters.patient_name|add_class:"form-control"|attr:"placeholder:Nour Amin.." }}
+                                    </div>
+                                    <div class="form-group-sm col-6">
+                                        <label class="form-label">National number</label>
+                                        {{ filters.national_number|add_class:"form-control"|attr:"placeholder:123456789" }}
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary">Filter</button>
+                                <a href="{% url 'staff-list' %}" class="btn btn-secondary ms-2">Reset</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+
+            <table class="table table-flush align-middle table-row-bordered table-row-solid gy-4 gs-9">
+
+                <thead class="border-gray-200 fs-5 fw-bold bg-lighten">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>National #</th>
+                    <th>Gender</th>
+                    <th>Phone</th>
+                    <th class="text-center border-start" style="width: 30%" colspan="2">Operations</th>
+                </tr>
+                </thead>
+
+                <tbody class="fs-6 fw-bold text-gray-600">
+                {% for person in staff %}
+                    <tr
+                            data-staff-id="{{ person.id }}"
+                            data-first-name="{{ person.first_name }}"
+                            data-last-name="{{ person.last_name }}"
+                            data-gender="{{ person.gender }}"
+                            data-phone="{{ person.phone }}"
+                            data-national-number="{{ person.national_number }}"
+                    >
+                        <td>{{ person.id }}</td>
+                        <td><a href="{% url 'profile' pk=person.id %}" target="_blank">{{ person.get_full_name }}</a>
+                        </td>
+                        <td>{{ person.national_number }}</td>
+                        <td>{{ person.gender }}</td>
+                        <td>{{ person.phone|dash_if_none }}</td>
+                        <td class="border-start px-3" style="width: 15%;">
+                            <button onclick="openEditPatient(this)" class="btn btn-light-primary w-100">
+                                <i class="las la-pencil-alt fs-3"></i>Edit
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% no_results flag=staff.count title='No match!' message="We couldn't find any staff that match what you're looking for." %}
+        </div>
+    </div>
+
+    <div class="modal fade" tabindex="-1" id="edit-staff-modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit staff info</h5>
+
+
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                         aria-label="Close">
+                        <span class="svg-icon svg-icon-2x"></span>
+                    </div>
+
+                </div>
+
+                <div class="modal-body">
+                    <form id="edit-staff-form" action="{% url 'staff-api-edit-staff' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" id="edit-staff-id" name="id">
+                        <div class="row">
+                            <div class="form-group col-6 mb-4">
+                                <label for="edit-staff-first_name" class="form-label required">First name</label>
+                                <input type="text" name="first_name" class="form-control form-control-solid"
+                                       id="edit-staff-first_name"
+                                       required/>
+                            </div>
+                            <div class="form-group col-6 mb-4">
+                                <label for="edit-staff-last_name" class="form-label required">Last name</label>
+                                <input type="text" name="last_name" class="form-control form-control-solid" required
+                                       id="edit-staff-last_name"/>
+                            </div>
+                            <div class="form-group col-6 mb-4">
+                                <label for="edit-staff-national_number" class="form-label required">National
+                                    number</label>
+                                <input type="text" name="national_number" class="form-control form-control-solid"
+                                       required
+                                       id="edit-staff-national_number"/>
+                            </div>
+                            <div class="form-group col-6 mb-4">
+                                <label for="edit-staff-gender" class="form-label required">Gender</label>
+                                <select name="gender" data-control="select2"
+                                        data-dropdown-parent="#edit-staff-modal"
+                                        class="form-select form-select-solid form-select-lg fw-bold">
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-6 mb-6">
+                                <label for="edit-staff-phone" class="form-label">Phone</label>
+                                <input type="text" name="phone" class="form-control form-control-solid"
+                                       required
+                                       id="edit-staff-phone"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                    <button form="edit-staff-form" type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" id="add-staff-modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add staff info</h5>
+
+
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                         aria-label="Close">
+                        <span class="svg-icon svg-icon-2x"></span>
+                    </div>
+
+                </div>
+
+                <div class="modal-body">
+                    <form id="add-staff-form" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="type" value="staff">
+                        <input type="hidden" name="is_staff" value="true">
+                        <input type="hidden" id="edit-staff-id" name="id">
+                        <div class="row">
+                            <div class="form-group col-6 mb-4">
+                                <label for="edit-staff-first_name" class="form-label required">Username</label>
+                                {{ form.username|add_class:"form-control form-control-solid" }}
+                            </div>
+                            <div class="form-group col-6 mb-4">
+                                <label for="edit-staff-national_number" class="form-label required">National
+                                    number</label>
+                                {{ form.national_number|add_class:"form-control form-control-solid" }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-6 mb-4">
+                                <label for="edit-staff-first_name" class="form-label required">Password</label>
+                                {{ form.password1|add_class:"form-control form-control-solid" }}
+                            </div>
+                            <div class="form-group col-6 mb-4">
+                                <label for="edit-staff-first_name" class="form-label required">Confirm password</label>
+                                {{ form.password2|add_class:"form-control form-control-solid" }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-6 mb-4">
+                                <label for="edit-staff-first_name" class="form-label required">First name</label>
+                                {{ form.first_name|add_class:"form-control form-control-solid" }}
+                            </div>
+                            <div class="form-group col-6 mb-4">
+                                <label for="edit-staff-last_name" class="form-label required">Last name</label>
+                                {{ form.last_name|add_class:"form-control form-control-solid" }}
+                            </div>
+
+                            <div class="form-group col-6 mb-4">
+                                <label for="edit-staff-gender" class="form-label required">Gender</label>
+                                {{ form.gender|add_class:"form-control form-control-solid" }}
+                            </div>
+                            <div class="form-group col-6 mb-6">
+                                <label for="edit-staff-phone" class="form-label">Phone</label>
+                                {{ form.phone|add_class:"form-control form-control-solid" }}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                    <button form="add-staff-form" type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script>
+        function openEditPatient(btn) {
+            let row = $(btn).closest('tr');
+            $('#edit-staff-first_name').val(row.attr('data-first-name'))
+            $('#edit-staff-last_name').val(row.attr('data-last-name'))
+            $('#edit-staff-national_number').val(row.attr('data-national-number'))
+            $('#edit-staff-phone').val(row.attr('data-phone'))
+            $('#edit-staff-id').val(row.attr('data-staff-id'))
+            $('#edit-staff-gender').val(row.attr('data-gender')).trigger('change')
+            $('#edit-staff-has_hyperlipidemia').attr('checked', row.attr('data-has-hyperlipidemia') == 'True')
+            $('#edit-staff-has_cancer').attr('checked', row.attr('data-has-cancer') == 'True')
+            $('#edit-staff-has_diabetes').attr('checked', row.attr('data-has-diabetes') == 'True')
+            $('#edit-staff-has_hypertension').attr('checked', row.attr('data-has-hypertension') == 'True')
+            $('#edit-staff-modal').modal('show');
+        }
+
+        function openAddPatient(btn) {
+            $('#add-staff-modal').modal('show');
+        }
+
+        async function VerifyPatient(patient_id, is_verified, btn) {
+            try {
+                let body = new FormData();
+                body.append('patient_id', JSON.stringify(patient_id));
+                body.append('is_verified', JSON.stringify(is_verified));
+                let response = await fetch('{% url 'staff-api-verification' %}', {
+                    body,
+                    method: 'post',
+                    headers: {
+                        "X-CSRFToken": getCookie("csrftoken")
+                    }
+                });
+                if (response.status == 200) {
+                    toastOut('Updated', 'Staff verification updated!', 'success')
+                    setTimeout(() => window.location.reload(), 500)
+                }
+            } catch (e) {
+                toastOut('Error', 'Something went wrong!', 'error')
+            }
+        }
+    </script>
+{% endblock %}
