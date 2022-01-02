@@ -6,10 +6,12 @@ from django.conf.urls.static import static
 
 from services.views import PatientSignup, LoginRedirect, Profile, CancelAppointment, DepartmentsList, \
     DepartmentAppointments, Home, BookAppointment, EditProfile, PatientsList, NewPeriodicMedication, NewResult, \
-    VerifyPatient, EditPatient, NewAppointment, StaffList, EditStaff
+    VerifyPatient, EditPatient, NewAppointment, StaffList, EditStaff, Testing
 
 urlpatterns = [
                   path('admin/', admin.site.urls),
+                  path('testing/', Testing.as_view()),
+
                   path('accounts/', include('django.contrib.auth.urls')),
                   path('accounts/signup/', PatientSignup.as_view(), name='signup'),
                   path('home', Home.as_view(), name='home'),

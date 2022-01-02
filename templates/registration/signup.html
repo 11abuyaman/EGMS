@@ -85,7 +85,7 @@
                     <div class="fv-row mb-5">
                         <label class="form-label fw-bolder text-dark fs-6">Confirm Password</label>
                         {{ form.password2|add_class:"form-control form-control-lg form-control-solid"|attr:"placeholder:********" }}
-                        {{ form.password2.errors }}
+                        <span style="color: red;">{{ form.password2.errors }}</span>
                     </div>
 
                     <div class="text-center">

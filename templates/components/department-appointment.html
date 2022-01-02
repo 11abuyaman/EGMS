@@ -20,12 +20,14 @@
             </div>
         </div>
         <div class="card-body p-5">
-            <button type="button"
-                    onclick="showConfirmBooking({{ appointment.id }},'{{ appointment.doctor.get_full_name }}','{{ appointment.date }}')"
-                    class="btn w-100 btn-primary"
-                    {% if department.appointments.count == 0 %}disabled{% endif %}>
-                <i class="far fa-calendar-check"></i> Book appointment
-            </button>
+            {% if user.type == 'patient' %}
+                <button type="button"
+                        onclick="showConfirmBooking({{ appointment.id }},'{{ appointment.doctor.get_full_name }}','{{ appointment.date }}')"
+                        class="btn w-100 btn-primary"
+                        {% if department.appointments.count == 0 %}disabled{% endif %}>
+                    <i class="far fa-calendar-check"></i> Book appointment
+                </button>
+            {% endif %}
         </div>
     </div>
 </div>

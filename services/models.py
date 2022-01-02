@@ -7,9 +7,9 @@ from django.utils import timezone
 
 class User(AbstractUser):
     TYPE_CHOICES = [
-        ('doctor', 'Doctor'),
-        ('staff', 'Staff'),
-        ('patient', 'Patient'),
+        ('doctor', 'Doctor option'),
+        ('staff', 'Staff option'),
+        ('patient', 'Patient option'),
     ]
     phone = models.CharField(max_length=100, null=True, blank=True)
     profile_picture = models.ImageField(null=True, blank=True)
@@ -52,6 +52,9 @@ class Appointment(models.Model):
     doctor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='d_appointments')
     patient = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='p_appointments', null=True, blank=True)
 
+    def __str__(self):
+        return self.date
+
     def is_this_week(self):
         d = self.date
         return (d - timezone.now()).days < 7
@@ -73,6 +76,10 @@ class Medicine(models.Model):
 
 class Result(models.Model):
     date = models.DateTimeField(auto_now_add=True)
+    # on_delete: what to do if the patient was deleted
+    # CASCADE: delete the result too
+    # SET_NULL: keep the result just empty the field
+    # DO_NOTHING: does nothing
     patient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='results')
     result_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='added_results')
     remarks = models.TextField()

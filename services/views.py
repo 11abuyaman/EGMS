@@ -39,7 +39,10 @@ class DepartmentsList(LoginRequiredMixin, ListView):
 
 class DepartmentAppointments(LoginRequiredMixin, View):
     def get(self, request, pk):
+
         department = Department.objects.get(pk=pk)
+        # users.objects.get(first_name='ahmad')
+
         grouped_appointments = {
             "in_week": [],
             "in_month": [],
@@ -212,6 +215,7 @@ class NewAppointment(UserIsStaffMixin, View):
 
     def post(self, request):
         form = AppointmentForm(request.POST, request.FILES)
+        print(request.method)
         if form.is_valid():
             form.save()
             messages.success(request, "Appointment has been added successfully!")
@@ -265,3 +269,11 @@ class EditStaff(UserIsStaffMixin, APIView):
         except Exception as e:
             messages.error(request, 'Something went wrong!: {}'.format(e))
         return redirect('staff-list')
+
+
+class Testing(View):
+    def get(self, request):
+        dept = Department.objects.get(id=2)
+        appointments = dept.appointments.all()
+
+        return render(request, 'testing.html', {'dept_t': dept, 'app': appointments})
