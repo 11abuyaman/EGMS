@@ -53,7 +53,7 @@ class Appointment(models.Model):
     patient = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='p_appointments', null=True, blank=True)
 
     def __str__(self):
-        return self.date
+        return str(self.date)
 
     def is_this_week(self):
         d = self.date

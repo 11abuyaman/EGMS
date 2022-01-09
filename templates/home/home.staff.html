@@ -10,9 +10,8 @@
     <div class="card">
         <div class="card-body">
             <div class="front-boxes-container">
-                <h2>Operations</h2>
-                <div class="d-flex">
-                    <a class="front-box-container" href="{% url 'staff-new-appointment' %}">
+                <div class="row">
+                    <a class="col-4 front-box-container" href="{% url 'staff-new-appointment' %}">
                         <div class="front-box-icon-container">
                             <i class=" front-box-icon las la-calendar"></i>
                             <span class="front-box-tag">
@@ -23,7 +22,7 @@
                             <span>New Appointment</span>
                         </div>
                     </a>
-                    <a class="front-box-container" href="{% url 'staff-new-result' %}">
+                    <a class="col-4 front-box-container" href="{% url 'staff-new-result' %}">
                         <div class="front-box-icon-container">
                             <i class="front-box-icon las la-file-invoice"></i>
                             <span class="front-box-tag">
@@ -34,7 +33,7 @@
                             <span>New Result</span>
                         </div>
                     </a>
-                    <a class="front-box-container" href="{% url 'staff-new-pm' %}">
+                    <a class="col-4 front-box-container" href="{% url 'staff-new-pm' %}">
                         <div class="front-box-icon-container">
                             <i class="front-box-icon las la-capsules"></i>
                             <span class="front-box-tag">
@@ -48,9 +47,8 @@
                 </div>
             </div>
             <div class="front-boxes-container">
-                <h2>Lists </h2>
-                <div class="d-flex">
-                    <a class="front-box-container" href="{% url 'staff-patients' %}">
+                <div class="row">
+                    <a class="col-4 front-box-container" href="{% url 'staff-patients' %}">
                         <div class="front-box-icon-container">
                             <i class=" front-box-icon las la-user-injured"></i>
                             <span class="front-box-tag">
@@ -61,7 +59,7 @@
                             <span>Patients</span>
                         </div>
                     </a>
-                    <a class="front-box-container" href="{% url 'staff-list' %}">
+                    <a class="col-4 front-box-container" href="{% url 'staff-list' %}">
                         <div class="front-box-icon-container">
                             <i class=" front-box-icon las la-users"></i>
                             <span class="front-box-tag">

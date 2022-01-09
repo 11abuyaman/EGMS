@@ -33,22 +33,17 @@ class LoginRedirect(LoginRequiredMixin, View):
 
 class DepartmentsList(LoginRequiredMixin, ListView):
     model = Department
-    # ordering = ['-appointments__date']
     template_name = 'appointments/departments.html'
 
 
 class DepartmentAppointments(LoginRequiredMixin, View):
     def get(self, request, pk):
-
         department = Department.objects.get(pk=pk)
-        # users.objects.get(first_name='ahmad')
-
         grouped_appointments = {
             "in_week": [],
             "in_month": [],
             "more": []
         }
-
         appointments = department.appointments.filter(patient=None, date__gte=datetime.today())
         for appointment in appointments:
             if appointment.is_this_week():
@@ -68,6 +63,7 @@ class PatientSignup(View):
         form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()
+
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
@@ -215,7 +211,6 @@ class NewAppointment(UserIsStaffMixin, View):
 
     def post(self, request):
         form = AppointmentForm(request.POST, request.FILES)
-        print(request.method)
         if form.is_valid():
             form.save()
             messages.success(request, "Appointment has been added successfully!")

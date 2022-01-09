@@ -43,6 +43,11 @@ class ResultForm(forms.ModelForm):
 
 
 class AppointmentForm(forms.ModelForm):
+    date = forms.DateTimeField(widget=forms.widgets.DateTimeInput(
+        format='%Y-%m-%d %H:%M',
+        attrs={'type': 'datetime-local'})
+    )
+
     class Meta:
         model = Appointment
         fields = ['date', 'department', 'doctor']

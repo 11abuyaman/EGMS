@@ -4,9 +4,8 @@
     <div class="card">
         <div class="card-body">
             <div class="front-boxes-container">
-                <h2>Operations</h2>
-                <div class="d-flex">
-                    <a class="front-box-container" href="{% url 'departments' %}">
+                <div class="row">
+                    <a class="col-4 front-box-container" href="{% url 'departments' %}">
                         <div class="front-box-icon-container bg-success">
                             <i class=" front-box-icon las la-calendar"></i>
                             <span class="front-box-tag">
@@ -17,7 +16,7 @@
                             <span>New Appointment</span>
                         </div>
                     </a>
-                    <a class="front-box-container" href="{% url 'edit-profile' %}">
+                    <a class="col-4 front-box-container" href="{% url 'edit-profile' %}">
                         <div class="front-box-icon-container">
                             <i class="front-box-icon las la-user-edit"></i>
                             <span class="front-box-tag">
@@ -28,7 +27,7 @@
                             <span>Edit Account</span>
                         </div>
                     </a>
-                    <a class="front-box-container" href="{% url 'profile' user.pk %}">
+                    <a class="col-4 front-box-container" href="{% url 'profile' user.pk %}">
                         <div class="front-box-icon-container">
                             <i class="front-box-icon las la-user"></i>
                             <span class="front-box-tag">
@@ -42,9 +41,8 @@
                 </div>
             </div>
             <div class="front-boxes-container">
-                <h2>My Information</h2>
-                <div class="d-flex">
-                    <a class="front-box-container" href="{% url 'profile' user.pk %}">
+                <div class="row">
+                    <a class="col-4 front-box-container" href="{% url 'profile' user.pk %}">
                         <div class="front-box-icon-container">
                             <i class="front-box-icon las la-file-invoice"></i>
                             <span class="front-box-tag">
@@ -55,7 +53,7 @@
                             <span>My Appointments</span>
                         </div>
                     </a>
-                    <a class="front-box-container" href="{% url 'profile' user.pk %}?active_tab=results">
+                    <a class="col-4 front-box-container" href="{% url 'profile' user.pk %}?active_tab=results">
                         <div class="front-box-icon-container">
                             <i class="front-box-icon las la-file-invoice"></i>
                             <span class="front-box-tag">
@@ -66,7 +64,7 @@
                             <span>My Results</span>
                         </div>
                     </a>
-                    <a class="front-box-container" href="{% url 'profile' user.pk %}?active_tab=medicines">
+                    <a class="col-4 front-box-container" href="{% url 'profile' user.pk %}?active_tab=medicines">
                         <div class="front-box-icon-container">
                             <i class="front-box-icon las la-capsules"></i>
                             <span class="front-box-tag">
