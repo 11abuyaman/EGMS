@@ -991,6 +991,15 @@
 {% block js %}
     <script>
 
+        function showConfirmCancellation(btn) {
+            let $row = $(btn).closest('tr');
+            let doctor = $row.attr('data-doctor');
+            let datetime = $row.attr('data-date');
+            let id = $row.attr('data-appointment-id');
+            $('#cancel-appointment-id').val(id);
+            $('#cancel-appointment-modal-body').html(`<p>Are you sure you want to cancel the appointment with <strong>Dr. ${doctor}</strong> at <strong><em>${datetime}</em></strong>?</p>`)
+            $('#cancel-appointment-modal').modal('show');
+        }
         async function confirmBooking() {
             let body = new FormData();
             let id = $('#book-appointment-id').val();
@@ -1040,15 +1049,6 @@
             }
         }
 
-        function showConfirmCancellation(btn) {
-            let $row = $(btn).closest('tr');
-            let doctor = $row.attr('data-doctor');
-            let datetime = $row.attr('data-date');
-            let id = $row.attr('data-appointment-id');
-            $('#cancel-appointment-id').val(id);
-            $('#cancel-appointment-modal-body').html(`<p>Are you sure you want to cancel the appointment with <strong>Dr. ${doctor}</strong> at <strong><em>${datetime}</em></strong>?</p>`)
-            $('#cancel-appointment-modal').modal('show');
-        }
 
     </script>
 {% endblock %}

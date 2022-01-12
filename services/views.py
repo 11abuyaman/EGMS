@@ -99,18 +99,12 @@ class EditProfile(LoginRequiredMixin, View):
 
 class CancelAppointment(LoginRequiredMixin, APIView):
     def post(self, request):
-        user = request.user
         appointment_id = request.POST.get('id', None)
-        print(appointment_id)
-        try:
-            appointment = Appointment.objects.get(id=appointment_id)
-            if user.id == appointment.patient.id:
-                appointment.patient = None
-                appointment.save()
-                return Response({'success': True})
 
-        except Appointment.DoesNotExist as e:
-            print(e)
+        appointment = Appointment.objects.get(id=appointment_id)
+        appointment.patient = None
+        appointment.save()
+        return Response({'success': True})
 
         Response({'success': False}, status=403)
 
